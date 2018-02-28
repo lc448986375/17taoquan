@@ -1,0 +1,246 @@
+{% extends "header.html" %}
+{% block body %}
+
+<div class="table-responsive">
+	<table class="table">
+		<tr>
+			{% if url_args['cate'] == null or url_args['cate'] == '' %}
+				<td class="danger" style="width:5%;text-align:center;white-space:nowrap;">
+					<a href="{{url_for(url_args['cur_path'], kwd = url_args['kwd'], activity = url_args['activity'])}}">
+						全部
+					</a>
+				</td>
+			{% else %}
+				<td style="width:5%;text-align:center;white-space:nowrap;">
+					<a href="{{url_for(url_args['cur_path'], kwd = url_args['kwd'], activity = url_args['activity'])}}">
+						全部
+					</a>
+				</td>
+			{% endif %}
+
+			{% for c in data['cls'] %}
+				{% if c['cls_code'] == url_args['cate'] %}
+					<td class="danger" style="width:5%;text-align:center;white-space:nowrap;">
+						<a href="{{url_for(url_args['cur_path'], cate = c.cls_code, kwd = url_args['kwd'], activity = url_args['activity'])}}">
+							{{c['cls_name']}}
+						</a>
+					</td>	
+				{% else %}
+					<td style="width:5%;text-align:center;white-space:nowrap;">
+						<a href="{{url_for(url_args['cur_path'], cate = c.cls_code, kwd = url_args['kwd'], activity = url_args['activity'])}}" >
+							{{c['cls_name']}}
+						</a>
+					</td>	
+				{% endif %}											
+			{% endfor %}
+			<td style="width:80%;text-align:center;white-space:nowrap;"></td>
+		</tr>
+	</table>
+</div>
+
+<div class="table-responsive" style="margin-bottom:10px;">
+	<table class="table table-condensed">
+		<tr>
+			{% for o in data['orders'] %}
+				{% if o['selected'] == 'Y'  %}
+					<td class="danger" style="width:5%;text-align:center;">
+						<a href="{{url_for(url_args['cur_path'], order = o['order'] + '_' + o['next'], cate = url_args['cate'], kwd = url_args['kwd'], activity = url_args['activity'])}}">
+							{{o['order_name'] + o['cur']}}
+						</a>
+					</td>
+					
+				{% else %}
+					<td style="width:5%;text-align:center;">
+						<a href="{{url_for(url_args['cur_path'], order = o['order'] + '_' + o['next'], cate = url_args['cate'], kwd = url_args['kwd'], activity = url_args['activity'])}}">
+							{{o['order_name']}}
+						</a>						
+					</td>
+				{% endif %}
+			{% endfor %}
+			<td style="width:90%;text-align:center;"></td>
+		</tr>
+	</table>
+</div>
+
+
+<div class="container-fluid">
+	<div class="row">
+		{% for item in data['pagination'].items %}
+			<div class="col-xs-6 col-sm-4 col-md-3 col-md-2">
+				<div class="thumbnail div_center">
+					<span class="label label-danger">
+						{{item.goods_coupon}}
+					</span>
+					<!--<a href="{{item.googs_coupon_buy_url}}" target="_blank">-->
+					<a href="{{url_for('show', id = item.id)}}" target="_blank">
+						<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+					</a>
+					<div class="caption">
+						<span style="color: #c20809;font-size:12px;">
+							{{item.convert_amt(item.goods_couponed_price)}}
+						</span>
+						<del style="color: #b7b7b7;font-size: 11px;">
+							{{item.convert_amt(item.goods_price)}}
+						</del>
+						<!-- 
+						<div style="color: #c20809;font-size:11px;">
+							返: {{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+						</div>
+						 -->
+						<!--<a href="{{item.googs_coupon_buy_url}}" target="_blank">-->
+						<a href="{{url_for('show', id = item.id)}}" target="_blank">
+							<h6>{{item.goods_name}}</h6>
+						</a>
+					</div>
+					<div class="container-fluid">
+						<span class="platform_div">{{item.platform_name()}}</span>
+						<span class="selled_div">销量:{{item.goods_selled}}</span>
+					</div>
+				</div>
+			</div>
+
+			{%if loop.index % 2 == 0 %}
+				<div class="clearfix visible-xs-block"></div>
+			{% endif %}
+			{%if loop.index % 3 == 0 %}
+				<div class="clearfix visible-sm-block"></div>
+			{% endif %}
+			{%if loop.index % 4 == 0 %}
+				<div class="clearfix visible-md-block"></div>
+			{% endif %}
+			{%if loop.index % 6 == 0 %}
+				<div class="clearfix visible-lg-block"></div>
+			{% endif %}
+		{% endfor %}
+
+	</div>
+</div>
+
+{% if data['pagination'].items %}
+<div class="container-fluid div_center">
+	<nav aria-label="Page navigation">
+  		<ul class="pagination">
+  			{% if data['pagination'].has_prev %}
+    		<li>
+      			<a href="{{url_for(url_args['cur_path'], page = data['pagination'].prev_num, cate = url_args['cate'], order = url_args['order'], kwd = url_args['kwd'], activity = url_args['activity'])}}" aria-label="Previous">
+        			<span aria-hidden="true">上一页</span>
+      			</a>
+    		</li>
+    		{% else %}
+    		<li class="disabled">
+      			<a aria-label="Previous">
+        			<span aria-hidden="true">上一页</span>
+      			</a>
+    		</li>
+    		{% endif %}
+    		<li>
+      			<a aria-label="Previous">
+        			<span aria-hidden="true">{{data['pagination'].page}} / {{data['pagination'].pages}} / {{data['pagination'].total}}</span>
+      			</a>
+    		</li>
+    		{% if data['pagination'].has_next %}
+    		<li>
+      			<a href="{{url_for(url_args['cur_path'], page = data['pagination'].next_num, cate = url_args['cate'], order = url_args['order'], kwd = url_args['kwd'], activity = url_args['activity'])}}" aria-label="Previous">
+        			<span aria-hidden="true">下一页</span>
+      			</a>
+    		</li>
+    		{% else %}
+    		<li class="disabled">
+      			<a aria-label="Previous">
+        			<span aria-hidden="true">下一页</span>
+      			</a>
+    		</li>
+    		{% endif %}
+  		</ul>
+	</nav>
+</div>
+
+{% elif data['more_coupon']['items'] %}
+
+<div class="panel-heading">
+	<b>复制天猫/淘宝商品标题到搜索框，然后点击 [淘一下] 可查询该商品的优惠券和返利</b>
+</div>
+<div class="container-fluid">
+	<div class="row">
+	{% for item in data['more_coupon']['items'] %}
+		<div class="col-xs-6 col-sm-4 col-md-3 col-md-2">
+			<div class="thumbnail div_center">
+				<span class="label label-danger">
+					{{item.coupon_info}}
+				</span>
+				<!--<a href="{{item.googs_coupon_buy_url}}" target="_blank">-->
+				<a href="{{item.coupon_click_url}}" target="_blank">
+					<img src="{{item.pict_url}}" alt="{{item.title}}" class="img-thumbnail">
+				</a>
+				<div class="caption">
+					<span style="color: #c20809;font-size:12px;">
+						{{item.goods_couponed_price}}
+					</span>
+					<del style="color: #b7b7b7;font-size: 11px;">
+						{{item.zk_final_price}}
+					</del>
+					<div style="color: #c20809;font-size:11px;">
+						返: {{item.commission_rate}}% ￥{{item.commission_amt}}
+					</div>								
+					<!--<a href="{{item.googs_coupon_buy_url}}" target="_blank">-->
+					<a href="{{item.coupon_click_url}}" target="_blank">
+						<h6>{{item.title}}</h6>
+					</a>
+					<span>{{item.shop_title}}</span>
+				</div>
+			</div>
+		</div>
+
+		{%if loop.index % 2 == 0 %}
+			<div class="clearfix visible-xs-block"></div>
+		{% endif %}
+		{%if loop.index % 3 == 0 %}
+			<div class="clearfix visible-sm-block"></div>
+		{% endif %}
+		{%if loop.index % 4 == 0 %}
+			<div class="clearfix visible-md-block"></div>
+		{% endif %}
+		{%if loop.index % 6 == 0 %}
+			<div class="clearfix visible-lg-block"></div>
+		{% endif %}
+	{% endfor %}
+	</div>
+</div>
+<div class="container-fluid div_center">
+	<nav aria-label="Page navigation">
+  		<ul class="pagination">
+  			{% if data['more_coupon']['page'].has_prev %}
+    		<li>
+      			<a href="{{url_for(url_args['cur_path'], page = data['more_coupon']['page'].prev_num,  kwd = url_args['kwd'])}}" aria-label="Previous">
+        			<span aria-hidden="true">上一页</span>
+      			</a>
+    		</li>
+    		{% else %}
+    		<li class="disabled">
+      			<a aria-label="Previous">
+        			<span aria-hidden="true">上一页</span>
+      			</a>
+    		</li>
+    		{% endif %}
+    		{% if data['more_coupon']['page'].has_next %}
+    		<li>
+      			<a href="{{url_for(url_args['cur_path'], page = data['more_coupon']['page'].next_num, kwd = url_args['kwd'])}}" aria-label="Previous">
+        			<span aria-hidden="true">下一页</span>
+      			</a>
+    		</li>
+    		{% else %}
+    		<li class="disabled">
+      			<a aria-label="Previous">
+        			<span aria-hidden="true">下一页</span>
+      			</a>
+    		</li>
+    		{% endif %}
+  		</ul>
+	</nav>
+</div>
+{% else %}
+<div class="container" style="padding:20px;">抱歉, 【{{url_args['kwd']}}】没有优惠呢, 您可以缩短商品标题, 修改分类, 搜索相关商品的优惠哦</div>
+{% endif %}
+
+
+{% endblock %}

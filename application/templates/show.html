@@ -1,0 +1,175 @@
+{% extends "header.html" %}
+{% block body %}
+
+<script type="text/javascript">
+	$(function(){
+		var clipboard = new Clipboard('#copy_tkl_btn');
+		clipboard.on('success', function(e) {
+			//console.log(e);
+			$('#copy_tkl_btn').popover('show');
+		});
+		clipboard.on('error', function(e) {
+			alert('复制失败, 请选中上面的信息, 手动复制')
+		});
+	});
+
+	function get_taokouling(id){
+		$('#get_tkl_btn').attr('disabled', 'disabled');
+
+		Ajax.post("{{url_for('get_taokouling')}}",
+			{"id" : id},
+			function(data){
+				$('#taokong_win').modal({
+					keyboard: false
+				});		
+				$('#tkl_textarea').html(data['toukouling']);
+			},
+			function(){
+				
+			},
+			function(){
+				$('#get_tkl_btn').removeAttr('disabled');
+			}
+		);
+	}
+
+</script>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h1 class="panel-title">{{data['goods'].goods_name}}</h1>
+  	</div>
+	
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<div class="thumbnail">
+					<img src="{{data['goods'].goods_img_url}}" alt="{{data['goods'].goods_name}}" class="img-thumbnail">
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+				    	<h3 class="panel-title">{{data['goods'].platform_name()}}----{{data['goods'].goods_shop_name}}</h3>
+				  	</div>
+					<div class="panel-body">
+						<p style="font-size:13px;color: #c20809;">
+							进入手机版网站或者下载app购买后领取现金红包.
+						</p>
+
+						<p style="font-size:16px;"><b>优惠券 : </b>{{data['goods'].goods_coupon}}</p>
+						<p>
+						<span style="color: #c20809;font-size:16px;">
+							<b>
+								券后价 : 
+								<span style="font-size:24px;">
+									{{data['goods'].convert_amt(data['goods'].goods_couponed_price)}}
+								</span>
+							</b>
+						</span>
+						<del style="color: #b7b7b7;font-size: 14px;"> 原价 : {{data['goods'].convert_amt(data['goods'].goods_price)}}</del>
+						</p>
+						<!-- 
+						<p style="font-size:16px;"><b>预计返利 : </b>
+						{{data['goods'].fanli_rate()}}% 约:{{data['goods'].fanli_amt()}}元
+						</p>
+						<p>
+							<span style="color: #c20809;font-size:16px;">
+								<b>
+									到手价约 : 
+									<span style="font-size:24px;">
+										{{data['goods'].rebated_price()}}
+									</span>
+								</b>
+							</span>
+						</p>
+						<p style="font-size: 10px;">
+							注:关注微信公众号(扫描右侧/下方二维码)方可领取返利<br/>
+							最终返利已实际为准, 与购买商品的型号、价格有关.
+						</p>
+						-->
+						<p style="font-size:16px;"><b>优惠券总量 : </b>{{data['goods'].goods_coupon_total}}</p>
+						<p style="font-size:16px;"><b>优惠券剩余 : </b>{{data['goods'].goods_coupon_balance}}</p>
+						<p style="font-size:16px;"><b>优惠券截止日 : </b>
+						{{data['goods'].googs_coupon_end_dt_format()}}</p>
+						
+
+						<p style="font-size:16px;"><b>销量 : </b>{{data['goods'].goods_selled}}</p>
+						<p>
+							<button class="btn btn-danger" type="button" onclick='get_taokouling("{{data['goods'].id}}")' id="get_tkl_btn">淘口令购买</button>
+							<a class="btn btn-danger" href="{{data['goods'].googs_coupon_buy_url}}" target="_blank" role="button">领券购买</a>
+						</p>
+						<p style="font-size:13px;">
+							淘口令购买:点击生成淘口令,复制淘口令,打开淘宝客户端将自动跳转到领券购买页面.<br/>
+							领券购买:点击后跳转到领券页面,在当前浏览器购买.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-md-2">
+				<div class="thumbnail">
+					<img src="{{url_for('static', filename='image/wechat_log.jpg')}}" alt="扫码关注领返利" class="img-thumbnail">
+					<div class="caption">
+						关注微信公众号(一起淘券网), 领券购买后还可以领取<b style="color: red;font-size: 16px;">现金红包</b>.
+					</div>
+				</div>
+			</div>
+		</div>
+  	</div>
+  	
+  		<div class="panel panel-info">
+	 	<div class="panel-heading">猜你喜欢</div>
+	  	<div class="panel-body">
+
+	  		<div class="row">
+				{% for item in data['link_goods'] %}
+					<div class="col-xs-6 col-md-2 div_center">
+						<span class="label label-danger">{{item.goods_coupon}}</span>
+						<a href="{{url_for('show', id = item.id)}}" target="_blank">
+							<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+						</a>
+						<div class="caption">
+							<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
+							<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
+							<!-- 
+							<div style="color: #c20809;font-size:11px;">
+								返: {{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+							</div>
+							 -->
+							<a href="{{url_for('show', id = item.id)}}" target="_blank">
+								<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
+							</a>
+						</div>
+					</div>
+		
+					{%if loop.index % 2 == 0 %}
+						<div class="clearfix visible-xs-block"></div>
+					{% endif %}
+				{% endfor %}
+			</div>
+	  	</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="taokong_win" tabindex="-1" role="dialog" aria-labelledby="taokong_win_label">
+  	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        		<h4 class="modal-title" id="taokong_win_label">您的淘口令已经生成</h4>
+      		</div>
+      		<div class="modal-body">
+      			<textarea class="form-control" rows="5" readonly="readonly" id="tkl_textarea" placeholder="淘口令生成中"></textarea>
+      		</div>
+      		<div class="modal-footer">
+      			<a tabindex="0" class="btn btn-default" role="button" data-trigger="focus" title="提示" data-content="淘口令已复制" id="copy_tkl_btn" data-placement="top" data-clipboard-target="#tkl_textarea">复制淘口令</a>
+        		<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+
+{% endblock %}

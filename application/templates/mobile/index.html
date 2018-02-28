@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html ng-app="17taoquan">
+    <head>
+        <meta charset="utf-8">
+        <title>一起淘券网</title>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+        <link href="{{url_for('static', filename='ionic/css/ionic.min.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/app.css')}}" rel="stylesheet">
+
+        <script src="{{url_for('static', filename='js/jquery.js')}}"></script>
+        <script src="{{url_for('static', filename='ionic/js/ionic.bundle.min.js')}}"></script>
+        <script src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}" ></script>
+        <script src="{{url_for('static', filename='js/app.js')}}"></script>
+        <script src="{{url_for('static', filename='js/clipboard.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/utils.js')}}"></script>
+        <script>
+            // 替换app.js中base_url变量。否则通过web访问有跨域问题
+            var base_url = "";
+        </script>
+    </head>
+
+    <body>
+        <ion-nav-bar class="bar-positive">
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+        </ion-nav-bar>
+
+        <ion-nav-view></ion-nav-view>
+                   
+        <script id="templates/tabs.html" type="text/ng-template">
+            <ion-tabs class="tabs-icon-top tabs-positive">
+      
+                <ion-tab title="首页" icon="ion-home" href="#/tab/home">
+                    <ion-nav-view name="home-tab"></ion-nav-view>
+                </ion-tab>
+      
+                <ion-tab title="超级搜索" icon="ion-search" href="#/tab/search">
+                    <ion-nav-view name="search-tab">
+                    </ion-nav-view>
+                </ion-tab>
+      
+                <ion-tab title="我的" icon="ion-android-contact" ui-sref="tabs.my">
+                    <ion-nav-view name="my-tab"></ion-nav-view>
+                </ion-tab>
+      
+            </ion-tabs>
+        </script>
+
+        <script id="templates/home.html" type="text/ng-template">
+            <ion-view view-title="首页">
+                <ion-content class="padding">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                超级券
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list">
+                                <goods_list_item items=super_coupon />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                爆款
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list">
+                                <goods_list_item items=hot_selled />
+                            </div>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+
+
+        <script id="templates/details.html" type="text/ng-template">
+            <ion-view view-title="商品明细">
+                <ion-nav-bar class="bar bar-header bar-positive">
+                    <ion-nav-buttons side="left">
+                        <a class="button icon icon-left ion-chevron-left" ng-click="back()">返回</a>
+                    </ion-nav-buttons>
+                </ion-nav-bar>
+
+                <ion-content class="padding">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                {[goods.goods_name]}
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="thumbnail">
+                                <img src="{[goods.goods_img_url]}" alt="{[goods.goods_name]}" />
+                                
+                                <div class="caption">
+                                    <p style="font-size:16px;">
+                                        <b>优惠券 </b> : {[goods.goods_coupon]}
+                                    </p>
+                                    <p>
+                                        <span style="color: #c20809;font-size:16px;">
+                                            <b>
+                                                券后价
+                                                <span style="font-size:24px;">
+                                                    : {[goods.goods_couponed_price]}
+                                                </span>
+                                            </b>
+                                        </span>
+                                        <del style="color: #b7b7b7;font-size: 14px;">
+                                            原价 : {[goods.goods_price]}
+                                        </del>
+                                    </p>
+
+                                    <p style="font-size:16px;">
+                                        <b>优惠券总量 : </b>
+                                        {[goods.goods_coupon_total]}
+                                    </p>
+
+                                    <p style="font-size:16px;">
+                                        <b>优惠券剩余 : </b>
+                                        {[goods.goods_coupon_balance]}
+                                    </p>
+
+                                    <p style="font-size:16px;">
+                                        <b>优惠券截止日 : </b>
+                                        {[goods.googs_coupon_end_dt]}
+                                    </p>
+            
+                                    <p style="font-size:16px;">
+                                        <b>销量 : </b>
+                                        {[goods.goods_selled]}
+                                    </p>
+
+                                    <p>
+                                        <button class="button button-assertive" ng-click="get_tkl(goods.id)">淘口令</button>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+      
+        <script id="templates/search.html" type="text/ng-template">
+            <ion-view view-title="{[search_page_title]}">
+                <ion-content class="padding">
+                    <form ng-submit="search(kwd)">
+                        <div class="bar bar-header item-input-inset">
+                            <label class="item-input-wrapper">
+                                <i class="icon ion-ios-search placeholder-icon"></i>
+                                <input type="search" placeholder="搜索" ng-model="kwd" />
+                            </label>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive" style="border:0px solid;">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td ng-repeat="c in cls" item="c" ng-click="cls_click({[c.cls_code]})" ng-class="cate == c.cls_code ? 'danger' :'' " style="width:5%;text-align:center;">{[c.cls_name]}</td>
+                                    <td style="width:90%;text-align:center;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive" style="border:0px solid;margin-top:-10px;">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td ng-repeat="o in orders" item="o" ng-class="order.indexOf(o.order) >= 0  ? 'danger' :'' " ng-click="order_click({[o]})" style="width:8%;text-align:center;border-bottom: 1px solid #ddd;">{[o.order_name]}{[o.selected == 'Y' ? o.cur : '']}</td>
+                                    <td style="width:90%;text-align:center;border-bottom: 1px solid #ddd;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> 
+                    
+                    <div class="list">
+                        <goods_list_item items=list />
+                    </div>
+                    <ion-infinite-scroll on-infinite="loadMore()" distance="1%" immediate-check="false" ng-if="has_next"></ion-infinite-scroll>
+                </ion-content>
+            </ion-view>
+        </script>
+
+
+        <script id="templates/nav-stack.html" type="text/ng-template">
+            <ion-view view-title="Tab Nav Stack">
+                <ion-content class="padding">
+                    <p><img src="http://ionicframework.com/img/diagrams/tabs-nav-stack.png" style="width:100%"></p>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <!-- 我的页面 -->
+        <script id="templates/my.html" type="text/ng-template">
+            <ion-view title="我的">
+                <ion-content>
+                    <div class="list card">
+                        <div class="item item-avatar">
+                            <img src="http://www.runoob.com/try/demo_source/mcfly.jpg">
+                            <h2>{[user.user_nickname]}</h2>
+                            <p>{[user.user_id]}</p>
+                        </div>
+
+                        <div class="item item-body">
+                            <div class="row">
+                                <div class="col">
+                                    <a class="button button-small button-clear icon-left ion-navicon button-dark" ng-href="#orders">订单</a>
+                                </div>
+                                <div class="col">
+                                    <a class="button button-small button-clear icon-left ion-heart button-dark">收藏</a>
+                                </div>
+                                <div class="col">
+                                    <a class="button button-small button-clear icon-left ion-gear-b button-dark">设置</a>
+                                </div>
+                                <div class="col">
+                                    <a class="button button-small button-clear icon-left ion-log-out button-dark" ng-click="logout()">登出</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="item item-body">
+                            <a class="button button-small button-clear button-dark">可用余额 : {[user.wallet_amt | currency : '']}</a>
+                            <a class="button button-small">提现</a>
+                            <a class="button button-small button-clear button-dark">待入账 : {[wallet.cf_amt | currency : '']}</a>
+                        </div>
+
+                        <div class="item item-body">
+                            <label class="item item-input">
+                                <input type="text" placeholder="输入淘宝/天猫订单号" ng-model="orders.mall_orders_id" />
+                            </label>
+
+                            <div class="padding">
+                                <button class="button button-block button-positive" ng-click="addOrders()">关联订单拿红包</button>
+                            </div>
+                        </div>
+
+                        <div class="item item-body">
+                            活动描述 : 通过本网站(17taoquan.wang) 或 一起淘券网app生成的淘口令购买后，输入淘宝/天猫订单号，待系统确认后将随机派送现金红包，最高 99 元
+                        </div>
+                    </div>
+              </ion-content>
+            </ion-view>
+        </script>
+
+        <!-- 登陆页面 -->
+        <script id="templates/login.html" type="text/ng-template">
+            <ion-view title="登陆">
+                <ion-content>
+                    <form ng-submit="login(username, password)">
+                        <div class="list">
+                            <label class="item item-input item-stacked-label">
+                                登录帐号, 笔笔拿红包
+                            </label>
+
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">用户名</span>
+                                <input type="text" placeholder="用户名(字母/数字)" ng-model="username">
+                            </label>
+
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">密码</span>
+                                <input type="password" placeholder="******" ng-model="password">
+                            </label>
+                        </div>
+                        <div class="padding">
+                            <button class="button button-block button-positive">登陆</button>
+                        </div>
+                    </form>
+                    <div class="padding">
+                        <a class="button button-block button-positive" ng-href="#regist">没有帐号?点击注册</a>
+                        <a class="button button-block button-positive" ng-href="#home">访客浏览?进入首页</a>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <!-- 注册页面 -->
+        <script id="templates/regist.html" type="text/ng-template">
+            <ion-view title="注册">
+                <ion-content>
+                    <form ng-submit="regist(regist_form.$valid)" name="regist_form" novalidate>
+                        <div class="list">
+                            <label class="item item-input item-stacked-label">
+                                    登录帐号, 笔笔拿红包
+                            </label>
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">用户名</span>
+                                <input type="text" placeholder="用户名(字母/数字)" name="username" ng-model="user.username" required check-username>
+                                <span style="color:red" ng-show="regist_form.username.$dirty && regist_form.username.$invalid">
+                                    <span ng-show="regist_form.username.$error.required">用户名必填</span>
+                                </span>
+                                <span style="color:red" ng-show="regist_form.username.$error.checkUsername">
+                                    <span ng-show="regist_form.username.$error.checkUsername">必须为字母/数字</span>
+                                </span>
+                            </label>
+
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">昵称</span>
+                                <input type="text" placeholder="起个好听的昵称吧" name="nickname" ng-model="user.nickname" required>
+                                <span style="color:red" ng-show="regist_form.nickname.$dirty && regist_form.nickname.$invalid">
+                                    <span ng-show="regist_form.nickname.$error.required">昵称必填</span>
+                                </span>
+                            </label>
+
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">密码</span>
+                                <input type="password" placeholder="******" ng-model="user.password" name="password" required>
+                                <span style="color:red" ng-show="regist_form.password.$dirty && regist_form.password.$invalid">
+                                    <span ng-show="regist_form.password.$error.required">密码必填</span>
+                                </span>
+                            </label>
+
+                            <label class="item item-input item-stacked-label">
+                                <span class="input-label">确认密码</span>
+                                <input type="password" placeholder="******" ng-model="user.re_password" name="re_password" required>
+                                <span style="color:red" ng-show="regist_form.re_password.$dirty && regist_form.re_password.$invalid">
+                                    <span ng-show="regist_form.re_password.$error.required">确认密码必填</span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="padding">
+                            <input class="button button-block button-positive" type="submit" ng-disabled="(regist_form.username.$dirty && regist_form.username.$invalid) || (regist_form.nickname.$dirty && regist_form.nickname.$invalid) || (regist_form.password.$dirty && regist_form.password.$invalid) || (regist_form.re_password.$dirty && regist_form.re_password.$invalid)" value="注册" />
+                        </div>
+                    </form>
+                    <div class="padding">
+                        <a class="button button-block button-positive" ng-href="#login">已有帐号?登陆</a>
+                        <a class="button button-block button-positive" ng-href="#home">访客浏览?进入首页</a>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <!-- 我的订单列表页 -->
+        <script id="templates/orders.html" type="text/ng-template">
+            <ion-view title="订单">
+                <ion-nav-bar class="bar bar-header bar-positive">
+                    <ion-nav-buttons side="left">
+                        <a class="button icon icon-left ion-chevron-left" ng-click="back()">返回</a>
+                    </ion-nav-buttons>
+                </ion-nav-bar>
+
+                <ion-content>
+                    <div class="list">
+                        <div class="item item-button-right" ng-repeat="order in orders">
+                            订单号:{[order.mall_orders_id]}<br/>
+                            <h4>订单状态:{[order.status_nm]} 订单金额:{[order.orders_amt | currency : '']}</h4>
+                            <button ng-class="order.status == 'CF' ? 'button button-assertive' : 'button'">
+                                红包:{[order.rebate_amt | currency : '']}
+                            </button>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </script>
+
+        <!-- 产品列表模板 -->
+        <script id="templates/goods_list_item.html" type="text/ng-template">
+            <a class="item item-thumbnail-left" ui-sref="details({id:item.id})" ng-repeat="item in items">
+                <img src="{[item.goods_img_url]}">
+                <h3>{[item.goods_name]}</h3>
+                <p style="font-size:13px;color:#ec4040;">
+                    {[item.goods_coupon]}
+                </p>
+                <p>
+                    <span style="color:#ec4040;font-size:17px;">
+                        {[item.goods_couponed_price]}
+                    </span>
+                    <del><span style="font-size:12px;">
+                        {[item.goods_price]}
+                    </span></del>
+                    <!-- 
+                    &nbsp;&nbsp;
+                    <span style="color:#ec4040;font-size:13px;">
+                        返利 : {[item.fanli_amt]}
+                    </span>
+                     -->
+                </p>
+                <p style="font-size:12px;">
+                    销量 : {[item.goods_selled]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{[item.goods_platform_name]}
+                </p>
+            </a>
+        </script>
+    </body>
+</html>

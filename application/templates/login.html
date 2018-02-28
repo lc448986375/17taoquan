@@ -1,0 +1,38 @@
+{% extends "header.html" %}
+{% block body %}
+
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="panel panel-info">
+	 	<div class="panel-heading">
+	 		用户登陆
+	 	</div>
+	  	<div class="panel-body">
+            <form role="form" action="{{url_for('login')}}" method="post">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">用户名</span>
+                    <input type="text" class="form-control" placeholder="用户名或邮箱" aria-describedby="basic-addon1" name="user_name" />
+                </div>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">密码</span>
+                    <input type="password" class="form-control" placeholder="******" aria-describedby="basic-addon1" name="password">
+                </div>
+                <br>
+
+                <div class="container-fluid" style="text-align:center;">
+
+                    <div class="btn-group" role="group">
+                        <button type="submit" class="btn btn-danger">登陆</button>
+                    </div>
+                    
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-warning">注册</button>
+                        <button type="button" class="btn btn-warning">找回密码</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

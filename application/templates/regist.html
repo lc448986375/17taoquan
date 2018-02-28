@@ -1,0 +1,42 @@
+{% extends "header.html" %}
+{% block body %}
+
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="panel panel-info">
+	 	<div class="panel-heading">
+	 		用户登陆
+	 	</div>
+	  	<div class="panel-body">
+
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">用户名</span>
+            <input type="text" class="form-control" placeholder="用户名 支持字母、数字" aria-describedby="basic-addon1">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">邮箱</span>
+            <input type="text" class="form-control" placeholder="邮箱 用于找回密码" aria-describedby="basic-addon1">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">密码</span>
+            <input type="password" class="form-control" placeholder="******" aria-describedby="basic-addon1">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">确认密码</span>
+            <input type="password" class="form-control" placeholder="******" aria-describedby="basic-addon1">
+        </div>
+        <br>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-warning">登陆</button>
+        </div>
+        
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-warning">注册</button>
+            <button type="button" class="btn btn-warning">找回密码</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "header.html" %}
+{% block body %}
+
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="panel panel-info">
+	 	<div class="panel-heading">
+	 		<b>下载APP, 购买后笔笔领现金红包, 最高 99</b> 
+	 	</div>
+	  	<div class="panel-body">
+
+	  		<div class="row">
+                <div class="col-xs-6 col-md-6">
+                    <div class="thumbnail div_center">
+                        <span class="label label-danger">Android下载</span>
+                        <a href="{{url_for('download', filename='17taoquan.apk')}}" target="_blank">
+                            <img src="{{url_for('static', filename='image/apk_download.png')}}" alt="下载app" class="img-thumbnail">
+                        </a>
+                        <div class="caption">
+                            点击/扫描二维码下载
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-md-6">
+                    <div class="thumbnail div_center">
+                        <span class="label label-danger">IOS下载</span>
+                        <div>
+                            没有mac, 没有mac, 没有mac。<br/>等搭建虚拟机后编译ios版本。<br/>请客官耐心等待。
+                            也可以使用<a href="{{url_for('mobile')}}">手机版</a>, 体验无差异<br/>
+                            或者捐赠一台mac~~~
+                        </div>
+                        <div class="caption">
+                            点击/扫描二维码下载
+                        </div>
+                    </div>
+                </div>
+			</div>
+	  	</div>
+	</div>
+
+
+</div>
+{% endblock %}

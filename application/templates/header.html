@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>{{site_info['title']}}-一起淘券网-优惠券,超级返利,天猫优惠券,淘宝优惠券,内部优惠券,9.9包邮,超级优惠券,最新优惠券</title>
+	<meta name="description" content="一起淘券网,优惠券,超级返利,天猫优惠券,淘宝优惠券,内部优惠券,9.9包邮,超级优惠券,最新优惠券,17taoquan.wang" />
+	<meta name="keywords" content="优惠券,超级返利,淘宝优惠券,天猫优惠券,内部优惠券,9.9包邮,超级优惠券,最新优惠券,一起淘券网,17taoquan.wang" />
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}" />
+	<link href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" />
+
+	<script type="text/javascript" src="{{url_for('static', filename='js/jquery.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static', filename='bootstrap/js/bootstrap.min.js')}}" ></script>
+	<script type="text/javascript" src="{{url_for('static', filename='js/utils.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static', filename='js/clipboard.min.js')}}"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-3"><h2><a href="{{url_for('index')}}">一起淘券网</a></h2></div>
+			<div class="col-xs-12 col-md-6">
+				<h2>
+					<form action="{{url_for('search')}}">
+						<div class="input-group">
+							<input type="text" name="kwd" class="form-control search_input" placeholder="复制商品标题 搜优惠券 拿返利" id="kwd" value="{{url_args['kwd']}}" />
+							<div class="input-group-addon" style="padding:0px 0px;">
+								<button type="submit" class="btn btn-primary">淘一下</button>
+							</div>
+						</div>
+					</form>
+				</h2>
+			</div>
+			<div class="col-xs-12 col-md-3">
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<h5>
+			<a class="btn btn-warning" href="{{url_for('index')}}" role="button">首页</a>
+			<a class="btn btn-warning" href="{{url_for('mobile')}}" role="button">手机版</a>
+			<a class="btn btn-warning" href="{{url_for('apps')}}" role="button">APP</a>
+		</h5>
+	</div>
+
+
+	<div class="panel panel-info">
+	{% block body %}{% endblock %}
+	</div>
+
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<div class="thumbnail">
+					<img src="{{url_for('static', filename='image/wechat_log.jpg')}}" alt="扫码关注领现金红包">
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-4">
+				关注微信公众号(一起淘券网), 领券购买后还可以领取现金红包
+			</div>
+			<div class="col-xs-12 col-md-4">
+				©2017 www.17taoquan.wang 一起淘券网
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+body{
+	font-size:13px;color:#2F2F2F;line-height:150%;
+	padding:0;margin:0;
+}
+div{
+	margin:0 auto; padding:0;
+}
+
+.main{
+	height:auto!important; height:380px; min-height:380px;width: 100%;
+}
+
+.search_input{
+	width: 200px;
+}
+
+.footer{
+	text-align: right;
+}
+
+.header{
+	text-align: right;
+}
+
+a.cate_a:link{
+	color:#ffffff;
+    text-decoration:none;
+}
+a.cate_a:visited{
+	color:#ffffff;
+    text-decoration:none;
+}
+a.cate_a:hover{
+	color:#ffffff;
+    text-decoration:none;
+}
+a.cate_a:active{
+	color:#ffffff;
+    text-decoration:none;
+}
+
+.platform_div{
+	float:left;
+	color:#b7b7b7;font-size:10px;
+}
+.selled_div{
+	float:right;
+	color:#b7b7b7;font-size:10px;
+}
+
+.div_center{
+	text-align: center;;
+}

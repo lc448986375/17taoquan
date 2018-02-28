@@ -1,0 +1,123 @@
+{% extends "header.html" %}
+{% block body %}
+
+<div class="container-fluid" style="margin-top: 20px;">
+	<!-- 
+	<div class="panel panel-info">
+	 	<div class="panel-heading">
+	 		<b>超级返</b> 
+	 	</div>
+	  	<div class="panel-body">
+
+	  		<div class="row">
+				{% for item in data['super_fanli'] %}
+					<div class="col-xs-6 col-md-3">
+						<div class="thumbnail div_center">
+							<span class="label label-danger">{{item.goods_coupon}}</span>
+							<a href="{{url_for('show', id = item.id)}}" target="_blank">
+								<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+							</a>
+							<div class="caption">
+								<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
+								<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
+								
+								<div style="color: #c20809;font-size:11px;">
+									返:{{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+								</div>
+								
+								<a href="{{url_for('show', id = item.id)}}" target="_blank">
+									<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
+								</a>
+								
+							</div>
+						</div>
+					</div>
+		
+					{%if loop.index % 2 == 0 %}
+						<div class="clearfix visible-xs-block"></div>
+					{% endif %}
+				{% endfor %}
+			</div>
+	  	</div>
+	</div>
+	-->
+
+	<div class="panel panel-info">
+	 	<div class="panel-heading">
+			 <b>超级优惠券</b> 
+		</div>	
+	  	<div class="panel-body">
+
+	  		<div class="row">
+				{% for item in data['super_coupon'] %}
+					<div class="col-xs-6 col-md-3">
+						<div class="thumbnail div_center">
+							<span class="label label-danger">{{item.goods_coupon}}</span>
+							<a href="{{url_for('show', id = item.id)}}" target="_blank">
+								<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+							</a>
+							<div class="caption">
+								<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
+								<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
+								<!-- 
+								<div style="color: #c20809;font-size:11px;">
+									返:{{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+								</div>
+							    -->
+								<a href="{{url_for('show', id = item.id)}}" target="_blank">
+									<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
+								</a>
+							</div>
+						</div>
+					</div>
+		
+					{%if loop.index % 2 == 0 %}
+						<div class="clearfix visible-xs-block"></div>
+					{% endif %}
+				{% endfor %}
+			</div>
+	  	</div>
+	</div>
+
+
+	<div class="panel panel-danger">
+	 	<div class="panel-heading">
+			 <b>爆款推荐</b> 
+		</div>
+	  	<div class="panel-body">
+
+	  		<div class="row">
+				{% for item in data['hot_selled'] %}
+					<div class="col-xs-6 col-md-3">
+						<div class="thumbnail div_center">
+							<span class="label label-danger">热销:{{item.goods_selled}}</span>
+							<a href="{{url_for('show', id = item.id)}}" target="_blank">
+								<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+							</a>
+							<div class="caption">
+								<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
+								<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
+								<!-- 
+								<div style="color: #c20809;font-size:11px;">
+									返:{{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+								</div>
+								-->
+								<a href="{{url_for('show', id = item.id)}}" target="_blank">
+									<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
+								</a>
+							</div>
+						</div>
+					</div>
+		
+					{%if loop.index % 2 == 0 %}
+						<div class="clearfix visible-xs-block"></div>
+					{% endif %}
+				{% endfor %}
+			</div>
+	  	</div>
+
+	</div>
+
+
+</div>
+{% endblock %}
