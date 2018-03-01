@@ -35,6 +35,7 @@
 
 </script>
 
+{% if data['goods'] %}
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h1 class="panel-title">{{data['goods'].goods_name}}</h1>
@@ -48,13 +49,14 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-md-6">
+				
 				<div class="panel panel-default">
 					<div class="panel-heading">
 				    	<h3 class="panel-title">{{data['goods'].platform_name()}}----{{data['goods'].goods_shop_name}}</h3>
 				  	</div>
 					<div class="panel-body">
 						<p style="font-size:13px;color: #c20809;">
-							进入手机版网站或者下载app购买后领取现金红包.
+							进入手机版网站或者下载app购买后领抽取现金红包.
 						</p>
 
 						<p style="font-size:16px;"><b>优惠券 : </b>{{data['goods'].goods_coupon}}</p>
@@ -111,47 +113,60 @@
 				<div class="thumbnail">
 					<img src="{{url_for('static', filename='image/wechat_log.jpg')}}" alt="扫码关注领返利" class="img-thumbnail">
 					<div class="caption">
-						关注微信公众号(一起淘券网), 领券购买后还可以领取<b style="color: red;font-size: 16px;">现金红包</b>.
+						关注微信公众号(一起淘券网), 领券购买后还可以抽取<b style="color: red;font-size: 16px;">现金红包</b>.
 					</div>
 				</div>
 			</div>
 		</div>
   	</div>
   	
-  		<div class="panel panel-info">
-	 	<div class="panel-heading">猜你喜欢</div>
-	  	<div class="panel-body">
-
-	  		<div class="row">
-				{% for item in data['link_goods'] %}
-					<div class="col-xs-6 col-md-2 div_center">
-						<span class="label label-danger">{{item.goods_coupon}}</span>
-						<a href="{{url_for('show', id = item.id)}}" target="_blank">
-							<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
-						</a>
-						<div class="caption">
-							<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
-							<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
-							<!-- 
-							<div style="color: #c20809;font-size:11px;">
-								返: {{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
-							</div>
-							 -->
-							<a href="{{url_for('show', id = item.id)}}" target="_blank">
-								<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
-							</a>
-						</div>
-					</div>
-		
-					{%if loop.index % 2 == 0 %}
-						<div class="clearfix visible-xs-block"></div>
-					{% endif %}
-				{% endfor %}
-			</div>
-	  	</div>
-	</div>
 </div>
+{% else %}
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h1 class="panel-title">优惠券失踪了...</h1>
+	</div>
+		
+	<div class="panel-body">
+		优惠券抢完了, 下次早点来哦<br/>
+		您可以搜索其它优惠券试试...
+	</div>
+{% endif %}
 
+<div class="panel panel-info">
+	<div class="panel-heading">
+		推荐
+	</div>
+		<div class="panel-body">
+
+			<div class="row">
+			{% for item in data['link_goods'] %}
+				<div class="col-xs-6 col-md-2 div_center">
+					<span class="label label-danger">{{item.goods_coupon}}</span>
+					<a href="{{url_for('show', id = item.id)}}" target="_blank">
+						<img src="{{item.goods_img_url}}" alt="{{item.goods_name}}" class="img-thumbnail">
+					</a>
+					<div class="caption">
+						<span style="color: #c20809;font-size:12px;">{{item.convert_amt(item.goods_couponed_price)}}</span>
+						<del style="color: #b7b7b7;font-size: 11px;">{{item.convert_amt(item.goods_price)}}</del>
+						<!-- 
+						<div style="color: #c20809;font-size:11px;">
+							返: {{item.fanli_rate()}}% ￥{{item.fanli_amt()}}
+						</div>
+						-->
+						<a href="{{url_for('show', id = item.id)}}" target="_blank">
+							<h6 style="word-wrap:break-word">{{item.goods_name}}</h6>
+						</a>
+					</div>
+				</div>
+	
+				{%if loop.index % 2 == 0 %}
+					<div class="clearfix visible-xs-block"></div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		</div>
+</div>
 
 <div class="modal fade" id="taokong_win" tabindex="-1" role="dialog" aria-labelledby="taokong_win_label">
   	<div class="modal-dialog" role="document">

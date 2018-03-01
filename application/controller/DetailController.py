@@ -26,13 +26,17 @@ def show(id):
         return render_template('show.html', data = data, site_info = site_info, url_args = url_args)
         
     else:
+        data = {
+            'goods' : None,
+            'link_goods' : goodsDao.get_hot_selld(6)
+        }
         site_info = {
             'title' : '优惠券抢完了, 为您推荐更多优惠券'
         }
         url_args = {
             
         }
-        return render_template('show.html', data = None, site_info = site_info, url_args = url_args)
+        return render_template('show.html', data = data, site_info = site_info, url_args = url_args)
 
 @app.route('/get_taokouling', methods=['GET', 'POST'])
 def get_taokouling():
@@ -89,7 +93,7 @@ def get_taokouling_by_url():
         app.logger.error(e)
         return '淘口令生成失败, 请稍后重试'
 
-   
+'''
 @app.route('/wx_api/show/<int:id>', methods=['GET', 'POST'])
 def wx_api_show(id):
     goods = db.session.query(Goods).filter(Goods.id == id).first()
@@ -112,7 +116,7 @@ def wx_api_show(id):
 
     else:
         return json.dumps(res)
-
+'''
 
 '''
 @app.route('/get_link_goods', methods=['POST'])
